@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+
+{% block title %} Супер заголовок {% endblock %}
+
+{% block main %}
+{% if name %}
+  <h1>Hello {{ name }}!</h1>
+{% else %}
+  <h1>Hello, World!</h1>
+{% endif %}
+
+
+<form action="/register" method="post">
+  First name:<br>
+  <input required type="text" name="firstname" value="" placeholder="Name"><br>
+  Last name:<br>
+  <input type="text" name="lastname" value="Mouse"><br><br>
+  <input type="submit" value="Submit">
+</form>
+
+
+
+
+<ul>
+  {% for user in users %}
+    <li><a href="{{ url_for('show_post', user_id=user.id) }}">
+       {{ user.username }}</a></li>
+  {% endfor %}
+</ul>
+
+{% endblock %}
