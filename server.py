@@ -5,53 +5,51 @@ import json
 
 app = Flask(__name__)
 
+
+# вывести список значений в шаблоне templates/part1.hmtl
+@app.route('/part1')
+def list_view():
+    l = [1, 2, 3, 4, 5, 6]
+    return render_template('part1.html', l=l)
+
+# извлечь данные из файла db.json и по id вывести информацию об объекте
+@app.route('/part2/<int:id>')
+def user_view(id):
+    pass    
+
+# вернуть в формате json словарь {'ans': xxx} с ответом из сложения двух GET-параметров, val1 и val2 
+@app.route('/part3')
+def add_numbers_view():
+	pass
+
+# обработать POST запрос и добавить к массиву из db.json новый элемент с указанным именем
+# id - произвольное число
+# вернуть словарь {'id': xxx} с id созданного элемента
+# форма ввода по адресу /post_test
+@app.route('/part4', methods=['POST'])
+def add_user():
+	id = random.randint(1, 100000)
+	return jsonify({'id': id})
+
+# вывести через шаблон список всех пользователей из файла db.json, 
+#в виде ссылки на страничку каждого пользователя, см часть 2 задания
+@app.route('/part5')
+def all_users():
+	pass
+
+
+
+# не трогать, можно протестировать предыдущее задание по пути /post_test
+@app.route('/post_test')
+def post_test():
+	return render_template('post_test.html')
+
+# главная страничка
 @app.route('/')
-def hello_world():
-    return '''
-    <h1>Hello World!00000</h1>
-    <a href="/hello">hello link</a>'''
-
-@app.route('/user/<int:user_id>')
-def show_post(user_id):
-    return 'User %s <a href="%s">Назад</a>' % (user_id, url_for('fun_hello', name="John"))
-
-
-@app.route('/hello/')
-@app.route('/hello/<name>')
-def fun_hello(name=None):
-
-    print(session['username'])
-    users = []
-    with open('db.json') as f:
-        users = json.load(f)
-
-    return render_template('hello.html', name=name, users=users)
-
-@app.route('/register', methods=['POST'])
-def register():
-    firstname = request.form['firstname']
-    lastname = request.form['lastname']
-
-    session['username'] = firstname
-
-    with open('db.json') as f:
-        users = json.load(f)
-        users.append({'id': random.randrange(1,100), 'username': firstname + " " + lastname})
-    
-    with open('db.json', 'w') as f:
-        json.dump(users, f)
-
-    return redirect(url_for('fun_hello'))
-
-@app.route('/_add_numbers')
-def add_numbers():
-    a = request.args.get('a', 0, type=int)
-    b = request.args.get('b', 0, type=int)
-    return jsonify(result=a + b)
+def index_view():
+	return render_template('index.html')
 
 
 if __name__ == '__main__':
-    app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
     app.debug = True
-    app.run(host='0.0.0.0')
-
+    app.run()
